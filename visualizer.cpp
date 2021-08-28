@@ -103,7 +103,7 @@ void Visualizer::setupFloor() {
     }
     gridLayout->setSpacing(0);
     connect(mapper, SIGNAL(mapped(int)), this, SLOT(handleObstacleClick(int)));
-    setTile({3, 3}, State::start);
+    setTile({1, 1}, State::start);
     setTile({WIDTH-2, HEIGHT-2}, State::goal);
 }
 void Visualizer::resetFloor() {
@@ -128,9 +128,22 @@ void Visualizer::clearFloor() {
 void Visualizer::on_Reset_clicked() { resetFloor(); }
 void Visualizer::on_Clear_clicked() { clearFloor(); }
 void Visualizer::on_Search_clicked() {
-    static Grid grid; // TODO: Change
-    grid.initGrid(floor);
-    grid.breadthFirstSearch();
+    if (this->searchExecuted) clearFloor();
+    if (this->algorithm == Algorithm::breadthFirst) {
+        static Grid grid; // TODO: Change
+        grid.initGrid(floor);
+        grid.breadthFirstSearch();
+    }
+    else if (this->algorithm == Algorithm::dijkstra) {
+        static WeightedGrid grid;
+        grid.initGrid(floor);
+        grid.dijkstraSearch();
+    }
+    else if (this->algorithm == Algorithm::astar) {
+        static WeightedGrid grid;
+        grid.initGrid((floor));
+        grid.aStarSearch();
+    }
     this->searchExecuted = true;
 }
 
@@ -206,19 +219,26 @@ void Visualizer::on_Preset1_clicked() {
     printPreset(this->preset1);
     updateStart({12, 10});
     updateGoal({34, 1});
-    qDebug() << "preset size:" << this->preset1.size();
 }
 void Visualizer::on_Preset2_clicked() {
     printPreset(this->preset2);
+    updateStart({0, 1});
+    updateGoal({38, 5});
 }
 void Visualizer::on_Preset3_clicked() {
    printPreset(this->preset3);
+    updateStart({0, 1});
+    updateGoal({35, 2});
 }
 void Visualizer::on_Preset4_clicked() {
    printPreset(this->preset4);
+    updateStart({11, 15});
+    updateGoal({22, 4});
 }
 void Visualizer::on_Preset5_clicked() {
    printPreset(this->preset5);
+    updateStart({11, 9});
+    updateGoal({26, 9});
 }
 
 void Visualizer::on_BreadthSearch_toggled(bool checked) { this->algorithm = Algorithm::breadthFirst; }

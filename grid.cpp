@@ -1,10 +1,10 @@
 #include "grid.h"
 
-Grid::Grid() : width(WIDTH), height(HEIGHT) {
+Grid::Grid() {
     initGrid(Visualizer::floor);
 }
 
-std::array<Coordinates, 4> Grid::DIRS = {
+std::array<Coordinates, 4> Grid::DELTA = {
     Coordinates{1, 0},  // East
     Coordinates{-1, 0}, // West
     Coordinates{0, -1}, // North
@@ -12,7 +12,7 @@ std::array<Coordinates, 4> Grid::DIRS = {
 };
 
 bool Grid::inBounds(Coordinates id) const {
-    return 0 <= id.x && id.x < width && 0 <= id.y && id.y < height;
+    return 0 <= id.x && id.x < WIDTH && 0 <= id.y && id.y < HEIGHT;
 }
 bool Grid::passable(Coordinates id) const {
     return this->obstacles.find(id) == this->obstacles.end();
@@ -21,7 +21,7 @@ bool Grid::passable(Coordinates id) const {
 std::vector<Coordinates> Grid::neighbors(Coordinates id) const {
     std::vector<Coordinates> ret;
 
-    for (const auto& dir : this->DIRS) {
+    for (const auto& dir : this->DELTA) {
         Coordinates next{id.x + dir.x, id.y + dir.y}; // Create delta coordinates
         if (inBounds(next) && passable(next))
             ret.push_back(next);
@@ -34,17 +34,10 @@ std::vector<Coordinates> Grid::neighbors(Coordinates id) const {
 void Grid::initGrid(QVector<QVector<Tile*>> floor) {
     for (const auto& row : floor) {
         for (const auto& tile : row) {
-            switch (tile->state) {
-                case State::obstacle: this->obstacles.insert(Coordinates{tile->y, tile->x}); break;
-                // case State::start: this->start = Visualizer::startCoordinates; break;
-                // case State::goal: this->goal = Visualizer::goalCoordinates; break;
-                default: break;
-            }
+            if (tile->state == State::obstacle)
+                this->obstacles.insert(Coordinates{tile->y, tile->x});
         }
     }
-    qDebug() << "OBSTACLES: " << this->obstacles.size();
-    // qDebug() << "Start:" << this->start.y << "," << this->start.x;
-    // qDebug() << "Goal:" << this->goal.y << "," << this->goal.x;
 }
 
 void Grid::printPath() {
@@ -80,13 +73,84 @@ void Grid::breadthFirstSearch() {
             if (this->cameFrom.find(next) == this->cameFrom.end()) {
                 frontier.push(next);
                 this->cameFrom[next] = current;
-                // if (next != this->start && next != this->goal)
-                    Visualizer::setTile(next, State::visited);
+                Visualizer::setTile(next, State::visited);
             }
         }
     }
     this->cameFrom.clear();
     this->obstacles.clear();
     // Visualizer::setTile(Visualizer::startCoordinates, State::start);
+    Visualizer::setTile(Visualizer::goalCoordinates, State::goal);
+}
+
+double WeightedGrid::cost(Coordinates fromNode, Coordinates toNode) const {
+    return 1;
+}
+
+void WeightedGrid::dijkstraSearch() {
+    PrioriyQueue<Coordinates, double> frontier;
+    frontier.put(Visualizer::startCoordinates, 0);
+
+    this->cameFrom[Visualizer::startCoordinates] = Visualizer::startCoordinates;
+    this->costSoFar[Visualizer::startCoordinates] = 0;
+
+    while (!frontier.empty()) {
+        Coordinates current = frontier.get();
+
+        if (current == Visualizer::goalCoordinates) {
+            printPath();
+            break;
+        }
+
+        for (Coordinates next : this->neighbors(current)) {
+            double newCost = this->costSoFar[current]  +  this->cost(current, next);
+            if (this->costSoFar.find(next) == this->costSoFar.end() || newCost < this->costSoFar[next]) {
+                this->costSoFar[next] = newCost;
+                this->cameFrom[next] = current;
+                frontier.put(next, newCost);
+                Visualizer::setTile(next, State::visited);
+            }
+        }
+    }
+    this->cameFrom.clear();
+    this->obstacles.clear();
+    this->costSoFar.clear();
+    Visualizer::setTile(Visualizer::goalCoordinates, State::goal);
+}
+
+// Helper function
+inline double heuristic(const Coordinates& a, const Coordinates& b) {
+    return std::abs(b.x - a.x) + abs(b.y - a.y);
+}
+
+void WeightedGrid::aStarSearch() {
+    PrioriyQueue<Coordinates, double> frontier;
+    frontier.put(Visualizer::startCoordinates, 0);
+
+    this->cameFrom[Visualizer::startCoordinates] = Visualizer::startCoordinates;
+    this->costSoFar[Visualizer::startCoordinates] = 0;
+
+    while (!frontier.empty()) {
+        Coordinates current = frontier.get();
+
+        if (current == Visualizer::goalCoordinates) {
+            printPath();
+            break;
+        }
+
+        for (Coordinates next : this->neighbors(current)) {
+            double newCost = this->costSoFar[current] + this->cost(current, next);
+            if (this->costSoFar.find(next) == this->costSoFar.end() || newCost < this->costSoFar[next]) {
+                this->costSoFar[next] = newCost;
+                double priority = newCost + heuristic(next, Visualizer::goalCoordinates);
+                frontier.put(next, priority);
+                this->cameFrom[next] = current;
+                Visualizer::setTile(next, State::visited);
+            }
+        }
+    }
+    this->cameFrom.clear();
+    this->obstacles.clear();
+    this->costSoFar.clear();
     Visualizer::setTile(Visualizer::goalCoordinates, State::goal);
 }
