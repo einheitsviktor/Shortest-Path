@@ -2,15 +2,18 @@
 #define HELPER_H
 
 #include <QPushButton>
+#include <QDebug>
 #include <tuple>
 #include <queue>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 
-enum class State { empty, obstacle, origin, destination };
+enum class State { empty, obstacle, visitied, origin, destination };
 
 class Tile : public QPushButton {
 public:
+    // x = width, y = height
     int x, y;
     State state;
 
@@ -19,19 +22,20 @@ public:
     // Getter
     bool isEmpty() const { return this->state == State::empty; }
     bool isObstacle() const { return this->state == State::obstacle; }
+    bool isVisited() const { return this->state == State::visitied; }
     bool isOrigin() const { return this->state == State::origin; }
     bool isDestination() const { return this->state == State::destination; }
 };
 
 struct Coordinates {
     int x, y;
-    friend bool operator==(const Coordinates& a, Coordinates& b) {
+    friend bool operator==(const Coordinates& a, const Coordinates& b) {
         return a.x == b.x && a.y == b.y;
     }
-    friend bool operator!=(const Coordinates& a, Coordinates& b) {
-        return !(a==b);
+    friend bool operator!=(const Coordinates& a, const Coordinates& b) {
+        return !(a == b);
     }
-    friend bool operator<(const Coordinates& a, Coordinates& b) {
+    friend bool operator<(const Coordinates& a, const Coordinates& b) {
         return std::tie(a.x, a.y) < std::tie(b.x, b.y);
     }
 };
@@ -62,27 +66,5 @@ struct PrioriyQueue {
 
 //----------------------------------------------------------------------------
 
-class standardGrid {
-private:
-    int width, height;
-    Coordinates start, goal;
-
-    // Container
-    static std::array<Coordinates, 4> DIRS;
-    std::unordered_set<Coordinates> obstacles;
-    std::unordered_map<Coordinates, Coordinates> cameFrom;
-
-    // Getter
-    bool inBounds(Coordinates id) const;
-    bool passable(Coordinates id) const;
-    std::vector<Coordinates> neighbors(Coordinates id) const;
-
-    // Methods
-    void initGrid();
-    void printPath();
-
-    // Search algorithm
-    void breadthFirstSearch();
-};
 
 #endif // HELPER_H

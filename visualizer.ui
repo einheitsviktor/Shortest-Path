@@ -33,7 +33,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>160</y>
+      <y>164</y>
       <width>1181</width>
       <height>16</height>
      </rect>
@@ -306,7 +306,7 @@
    <widget class="QPushButton" name="Search">
     <property name="geometry">
      <rect>
-      <x>1040</x>
+      <x>1020</x>
       <y>90</y>
       <width>151</width>
       <height>71</height>
@@ -496,7 +496,7 @@
    <widget class="QPushButton" name="Clear">
     <property name="geometry">
      <rect>
-      <x>1040</x>
+      <x>1020</x>
       <y>50</y>
       <width>151</width>
       <height>31</height>
@@ -514,7 +514,7 @@
    <widget class="QPushButton" name="Reset">
     <property name="geometry">
      <rect>
-      <x>1040</x>
+      <x>1020</x>
       <y>10</y>
       <width>151</width>
       <height>31</height>
@@ -532,7 +532,7 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>790</x>
+      <x>750</x>
       <y>20</y>
       <width>221</width>
       <height>131</height>
@@ -543,7 +543,7 @@
       <widget class="QRadioButton" name="BreadthSearch">
        <property name="font">
         <font>
-         <pointsize>10</pointsize>
+         <pointsize>12</pointsize>
         </font>
        </property>
        <property name="text">
@@ -558,7 +558,7 @@
       <widget class="QRadioButton" name="DijkstraSearch">
        <property name="font">
         <font>
-         <pointsize>10</pointsize>
+         <pointsize>12</pointsize>
         </font>
        </property>
        <property name="text">
@@ -570,7 +570,7 @@
       <widget class="QRadioButton" name="AstarSearch">
        <property name="font">
         <font>
-         <pointsize>10</pointsize>
+         <pointsize>12</pointsize>
         </font>
        </property>
        <property name="text">
@@ -583,7 +583,7 @@
    <widget class="Line" name="line_6">
     <property name="geometry">
      <rect>
-      <x>1010</x>
+      <x>990</x>
       <y>10</y>
       <width>16</width>
       <height>151</height>

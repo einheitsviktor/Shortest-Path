@@ -24,6 +24,8 @@ set(PROJECT_SOURCES
         visualizer.cpp
         visualizer.h
         visualizer.ui
+        grid.h
+        grid.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -56,3 +58,5 @@ set_target_properties(Shortest-Path PROPERTIES
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(Shortest-Path)
 endif()
+
+# set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=address")
