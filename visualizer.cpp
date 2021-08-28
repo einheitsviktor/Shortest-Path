@@ -14,8 +14,8 @@ Visualizer::Visualizer(QWidget *parent)
 Visualizer::~Visualizer() { delete ui; }
 
 QVector<QVector<Tile*>> Visualizer::floor;
-Tile* Visualizer::originPtr = nullptr;
-Tile* Visualizer::destinationPtr = nullptr;
+Coordinates Visualizer::startCoordinates;
+Coordinates Visualizer::goalCoordinates;
 
 
 // Helper function
@@ -37,24 +37,28 @@ void Visualizer::setTile(Coordinates id, State state) {
                 floor[id.y][id.x]->setText("");
                 break;
             }
-            case State::visitied: {
-                floor[id.y][id.x]->state = State::visitied;
+            case State::visited: {
+                floor[id.y][id.x]->state = State::visited;
                 floor[id.y][id.x]->setStyleSheet(VISITED);
-                // floor[x][y]->setText("");
-
-        }
-            case State::origin: {
-                floor[id.y][id.x]->state = State::origin;
-                floor[id.y][id.x]->setStyleSheet(ORIGIN);
-                floor[id.y][id.x]->setText("O");
-                originPtr = floor[id.y][id.x];
                 break;
             }
-            case State::destination: {
-                floor[id.y][id.x]->state = State::destination;
-                floor[id.y][id.x]->setStyleSheet(DESTINATION);
-                floor[id.y][id.x]->setText("D");
-                destinationPtr = floor[id.y][id.x];
+            case State::path: {
+                floor[id.y][id.x]->state = State::path;
+                floor[id.y][id.x]->setStyleSheet(PATH);
+                break;
+            }
+            case State::start: {
+                floor[id.y][id.x]->state = State::start;
+                floor[id.y][id.x]->setStyleSheet(START);
+                floor[id.y][id.x]->setText("S");
+                startCoordinates = id;
+                break;
+            }
+            case State::goal: {
+                floor[id.y][id.x]->state = State::goal;
+                floor[id.y][id.x]->setStyleSheet(GOAL);
+                floor[id.y][id.x]->setText("G");
+                goalCoordinates = id;
                 break;
             }
             default: break;
@@ -99,13 +103,13 @@ void Visualizer::setupFloor() {
     }
     gridLayout->setSpacing(0);
     connect(mapper, SIGNAL(mapped(int)), this, SLOT(handleObstacleClick(int)));
-    setTile({1, 1}, State::origin);
-    setTile({WIDTH-2, HEIGHT-2}, State::destination);
+    setTile({3, 3}, State::start);
+    setTile({WIDTH-2, HEIGHT-2}, State::goal);
 }
 void Visualizer::resetFloor() {
     for (auto& row : floor) {
         for (auto& tile : row) {
-            if (tile->isVisited() || tile->isObstacle())
+            if (tile->isVisited() || tile->isObstacle() || tile->isPath())
                 setTile({tile->y, tile->x}, State::empty);
         }
     }
@@ -114,7 +118,7 @@ void Visualizer::resetFloor() {
 void Visualizer::clearFloor() {
     for (auto& row : floor) {
         for (auto& tile : row) {
-            if (tile->isVisited())
+            if (tile->isVisited() || tile->isPath())
                 setTile({tile->y, tile->x}, State::empty);
         }
     }
@@ -125,29 +129,35 @@ void Visualizer::on_Reset_clicked() { resetFloor(); }
 void Visualizer::on_Clear_clicked() { clearFloor(); }
 void Visualizer::on_Search_clicked() {
     static Grid grid; // TODO: Change
+    grid.initGrid(floor);
+    grid.breadthFirstSearch();
+    this->searchExecuted = true;
 }
 
 // Move Start and Goal
-void Visualizer::updateOrigin(Coordinates id) {
-    if (inBounds(id) && !floor[id.y][id.x]->isDestination()) {
-        setTile({originPtr->y, originPtr->x}, State::empty);
-        setTile(id, State::origin);
+void Visualizer::updateStart(Coordinates id) {
+    if (this->searchExecuted) clearFloor();
+    if (inBounds(id) && !floor[id.y][id.x]->isGoal()) {
+        setTile(startCoordinates, State::empty);
+        setTile(id, State::start);
     }
 }
-void Visualizer::updateDestination(Coordinates id) {
-    if (inBounds(id) && !floor[id.y][id.x]->isOrigin()) {
-        setTile({destinationPtr->y, destinationPtr->x}, State::empty);
-        setTile(id, State::destination);
+void Visualizer::updateGoal(Coordinates id) {
+    if (this->searchExecuted) clearFloor();
+    if (inBounds(id) && !floor[id.y][id.x]->isStart()) {
+        setTile(goalCoordinates, State::empty);
+        setTile(id, State::goal);
     }
 }
-void Visualizer::on_UpO_clicked() { updateOrigin({originPtr->y, originPtr->x-1}); }
-void Visualizer::on_LeftO_clicked() { updateOrigin({originPtr->y-1, originPtr->x}); }
-void Visualizer::on_DownO_clicked() { updateOrigin({originPtr->y, originPtr->x+1}); }
-void Visualizer::on_RightO_clicked() { updateOrigin({originPtr->y+1, originPtr->x}); }
-void Visualizer::on_UpD_clicked() { updateDestination({destinationPtr->y, destinationPtr->x-1}); }
-void Visualizer::on_LeftD_clicked() { updateDestination({destinationPtr->y-1, destinationPtr->x}); }
-void Visualizer::on_DownD_clicked() { updateDestination({destinationPtr->y, destinationPtr->x+1}); }
-void Visualizer::on_RightD_clicked() { updateDestination({destinationPtr->y+1, destinationPtr->x}); }
+void Visualizer::on_UpO_clicked() { updateStart({startCoordinates.x, startCoordinates.y-1}); }
+void Visualizer::on_LeftO_clicked() { updateStart({startCoordinates.x-1, startCoordinates.y}); }
+void Visualizer::on_DownO_clicked() { updateStart({startCoordinates.x, startCoordinates.y+1}); }
+void Visualizer::on_RightO_clicked() { updateStart({startCoordinates.x+1, startCoordinates.y}); }
+
+void Visualizer::on_UpD_clicked() { updateGoal({goalCoordinates.x, goalCoordinates.y-1}); }
+void Visualizer::on_LeftD_clicked() { updateGoal({goalCoordinates.x-1, goalCoordinates.y}); }
+void Visualizer::on_DownD_clicked() { updateGoal({goalCoordinates.x, goalCoordinates.y+1}); }
+void Visualizer::on_RightD_clicked() { updateGoal({goalCoordinates.x+1, goalCoordinates.y}); }
 
 void Visualizer::keyPressEvent(QKeyEvent* event) {
     switch (event->key()) {
@@ -173,12 +183,16 @@ void Visualizer::keyPressEvent(QKeyEvent* event) {
 // TODO: DELETE LATER
 //HELPER
 void Visualizer::printObstacles() {
+    int count = 0;
     for (const auto& row : floor) {
         for (const auto& tile: row) {
-            if (tile->isObstacle())
+            if (tile->isObstacle()) {
                 qDebug() << "{" << tile->x << "," << tile->y << "},";
+                ++count;
+            }
         }
     }
+    qDebug() << "COUNT OBSTACLES:" << count;
 }
 
 // Preset setter
@@ -190,8 +204,9 @@ void Visualizer::printPreset(const QVector<QVector<int>>& preset) {
 
 void Visualizer::on_Preset1_clicked() {
     printPreset(this->preset1);
-    updateOrigin({12, 10});
-    updateDestination({34, 1});
+    updateStart({12, 10});
+    updateGoal({34, 1});
+    qDebug() << "preset size:" << this->preset1.size();
 }
 void Visualizer::on_Preset2_clicked() {
     printPreset(this->preset2);

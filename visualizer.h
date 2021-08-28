@@ -12,9 +12,9 @@ constexpr int WIDTH = 40;
 const QString EMPTY = "background-color: rgb(248, 248, 248);";
 const QString OBSTACLE = "background-color: rgb(0, 0, 75);";
 const QString PATH = "background-color: rgb(0, 190, 255);";
-const QString VISITED = "background-color: rgb(200,200,200);";
-const QString ORIGIN = "background-color: rgb(0, 255, 0);";
-const QString DESTINATION = "background-color: red;";
+const QString VISITED = "background-color: rgb(100,150,255);";
+const QString START = "background-color: rgb(0, 255, 0);";
+const QString GOAL = "background-color: red;";
 
 enum class Algorithm { breadthFirst, dijkstra, astar };
 
@@ -31,6 +31,8 @@ public:
 
     static QVector<QVector<Tile*>> floor;
     static void setTile(Coordinates id, State state);
+    static Coordinates startCoordinates;
+    static Coordinates goalCoordinates;
 
  private slots:
     void handleObstacleClick(int index);
@@ -55,27 +57,22 @@ public:
     void on_AstarSearch_toggled(bool checked);
 
     void on_Preset2_clicked();
-
     void on_Preset3_clicked();
-
     void on_Preset4_clicked();
-
     void on_Preset5_clicked();
 
 private:
     Ui::Visualizer *ui;
 
     Algorithm algorithm;
-    static Tile* originPtr;
-    static Tile* destinationPtr;
 
     bool searchExecuted;
     void setupFloor();
     void resetFloor();
     void clearFloor();
 
-    void updateOrigin(Coordinates id);
-    void updateDestination(Coordinates id);
+    void updateStart(Coordinates id);
+    void updateGoal(Coordinates id);
 
     void keyPressEvent(QKeyEvent* event) override;
 

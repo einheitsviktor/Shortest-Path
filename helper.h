@@ -9,7 +9,7 @@
 #include <unordered_set>
 #include <utility>
 
-enum class State { empty, obstacle, visitied, origin, destination };
+enum class State { empty, obstacle, visited, start, goal, path };
 
 class Tile : public QPushButton {
 public:
@@ -22,9 +22,10 @@ public:
     // Getter
     bool isEmpty() const { return this->state == State::empty; }
     bool isObstacle() const { return this->state == State::obstacle; }
-    bool isVisited() const { return this->state == State::visitied; }
-    bool isOrigin() const { return this->state == State::origin; }
-    bool isDestination() const { return this->state == State::destination; }
+    bool isVisited() const { return this->state == State::visited; }
+    bool isStart() const { return this->state == State::start; }
+    bool isGoal() const { return this->state == State::goal; }
+    bool isPath() const { return this->state == State::path; }
 };
 
 struct Coordinates {
