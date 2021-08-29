@@ -7,7 +7,7 @@
 #include <queue>
 #include <unordered_map>
 #include <unordered_set>
-#include <utility>
+// #include <utility>
 
 enum class State { empty, obstacle, visited, start, goal, path };
 
@@ -52,6 +52,7 @@ struct hash<Coordinates> {
 };
 } // namespace std
 
+// Wrapper for own priority queue sort
 template<typename T, typename priority_t>
 struct PrioriyQueue {
     std::priority_queue<std::pair<priority_t, T>, std::vector<std::pair<priority_t, T>>,

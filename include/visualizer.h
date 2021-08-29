@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QSignalMapper>
 #include <QKeyEvent>
+#include <QFuture>
+#include <QtConcurrent>
+#include <functional>
 
 #include "grid.h"
 
@@ -11,8 +14,8 @@ constexpr int HEIGHT = 20;
 constexpr int WIDTH = 40;
 const QString EMPTY = "background-color: rgb(248, 248, 248);";
 const QString OBSTACLE = "background-color: rgb(0, 0, 75);";
-const QString PATH = "background-color: rgb(0, 190, 255);";
-const QString VISITED = "background-color: rgb(100,150,255);";
+const QString PATH = "background-color: rgb(255, 255, 0);";
+const QString VISITED = "background-color: rgb(150,150,180);";
 const QString START = "background-color: rgb(0, 255, 0);";
 const QString GOAL = "background-color: red;";
 
@@ -34,7 +37,12 @@ public:
     static Coordinates startCoordinates;
     static Coordinates goalCoordinates;
 
+    static void dispatchToMainThread(std::function<void()> callback);
+
  private slots:
+    void searchStarted();
+    void searchEnded();
+
     void handleObstacleClick(int index);
 
     void on_Preset1_clicked();
@@ -62,6 +70,7 @@ public:
 
 private:
     Ui::Visualizer *ui;
+    QFutureWatcher<void> mFuturewatcher;
 
     Algorithm algorithm;
 

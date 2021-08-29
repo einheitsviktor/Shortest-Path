@@ -31,6 +31,11 @@ class WeightedGrid : public  Grid {
 public:
     std::unordered_map<Coordinates, double> costSoFar;
     double cost(Coordinates fromNode, Coordinates toNode) const;
+    void clearContainers() {
+        this->obstacles.clear();
+        this->cameFrom.clear();
+        this->costSoFar.clear();
+    }
 
     // Search algorithms
     void dijkstraSearch();

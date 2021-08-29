@@ -47,13 +47,19 @@ void Grid::printPath() {
         path.push_back(current);
         current = this->cameFrom[current];
     }
+    Visualizer::setTile(Visualizer::goalCoordinates, State::goal);
     auto rit = path.rbegin();
     for (; rit != path.rend(); ++rit) {
-        Visualizer::setTile(*rit, State::path);
+        Visualizer::dispatchToMainThread([=]{
+            Visualizer::setTile(*rit, State::path); // TODO: add dispatch here!
+        });
+        QThread::usleep(10000);
     }
 }
 
 void Grid::breadthFirstSearch() {
+    this->obstacles.clear();
+    initGrid(Visualizer::floor);
     std::queue<Coordinates> frontier;
     frontier.push(Visualizer::startCoordinates);
 
@@ -72,7 +78,10 @@ void Grid::breadthFirstSearch() {
             if (this->cameFrom.find(next) == this->cameFrom.end()) {
                 frontier.push(next);
                 this->cameFrom[next] = current;
-                Visualizer::setTile(next, State::visited);
+                Visualizer::dispatchToMainThread([=]{
+                    Visualizer::setTile(next, State::visited);
+                });
+                QThread::msleep(5);
             }
         }
     }
@@ -87,6 +96,8 @@ double WeightedGrid::cost(Coordinates fromNode, Coordinates toNode) const {
 }
 
 void WeightedGrid::dijkstraSearch() {
+    clearContainers();
+    initGrid(Visualizer::floor);
     PrioriyQueue<Coordinates, double> frontier;
     frontier.put(Visualizer::startCoordinates, 0);
 
@@ -103,17 +114,20 @@ void WeightedGrid::dijkstraSearch() {
 
         for (Coordinates next : this->neighbors(current)) {
             double newCost = this->costSoFar[current]  +  this->cost(current, next);
-            if (this->costSoFar.find(next) == this->costSoFar.end() || newCost < this->costSoFar[next]) {
+            if (this->costSoFar.find(next) == this->costSoFar.end()
+                    || newCost < this->costSoFar[next])
+            {
                 this->costSoFar[next] = newCost;
                 this->cameFrom[next] = current;
                 frontier.put(next, newCost);
-                Visualizer::setTile(next, State::visited);
+                Visualizer::dispatchToMainThread([=]{
+                    Visualizer::setTile(next, State::visited);
+                });
+                QThread::msleep(5);
             }
         }
     }
-    this->cameFrom.clear();
-    this->obstacles.clear();
-    this->costSoFar.clear();
+    clearContainers();
     Visualizer::setTile(Visualizer::goalCoordinates, State::goal);
 }
 
@@ -123,6 +137,8 @@ inline double heuristic(const Coordinates& a, const Coordinates& b) {
 }
 
 void WeightedGrid::aStarSearch() {
+    clearContainers();
+    initGrid(Visualizer::floor);
     PrioriyQueue<Coordinates, double> frontier;
     frontier.put(Visualizer::startCoordinates, 0);
 
@@ -139,17 +155,20 @@ void WeightedGrid::aStarSearch() {
 
         for (Coordinates next : this->neighbors(current)) {
             double newCost = this->costSoFar[current] + this->cost(current, next);
-            if (this->costSoFar.find(next) == this->costSoFar.end() || newCost < this->costSoFar[next]) {
+            if (this->costSoFar.find(next) == this->costSoFar.end()
+                    || newCost < this->costSoFar[next])
+            {
                 this->costSoFar[next] = newCost;
                 double priority = newCost + heuristic(next, Visualizer::goalCoordinates);
                 frontier.put(next, priority);
                 this->cameFrom[next] = current;
-                Visualizer::setTile(next, State::visited);
+                Visualizer::dispatchToMainThread([=]{
+                    Visualizer::setTile(next, State::visited);
+                });
+                QThread::msleep(5);
             }
         }
     }
-    this->cameFrom.clear();
-    this->obstacles.clear();
-    this->costSoFar.clear();
+    clearContainers();
     Visualizer::setTile(Visualizer::goalCoordinates, State::goal);
 }

@@ -9,14 +9,44 @@ Visualizer::Visualizer(QWidget *parent)
 {
     ui->setupUi(this);
     setupFloor();
+
+    connect(&mFuturewatcher, SIGNAL(started()), this, SLOT(searchStarted()));
+    connect(&mFuturewatcher, SIGNAL(finished()), this, SLOT(searchEnded()));
 }
 
 Visualizer::~Visualizer() { delete ui; }
 
+// Deactivate all input while animating path search
+void Visualizer::searchStarted() {
+    QWidget::setEnabled(false);
+    qDebug() << "searchStarted()";
+}
+void Visualizer::searchEnded() {
+    if (mFuturewatcher.isFinished()) {
+        QWidget::setEnabled(true);
+    }
+    qDebug() << "searchEnded()";
+}
+
+
+// Attempt to make GUI updates threadsafe
+void Visualizer::dispatchToMainThread(std::function<void()> callback) {
+    // Any thread
+    QTimer* timer = new QTimer();
+    timer->moveToThread(qApp->thread());
+    timer->setSingleShot(true);
+    QObject::connect(timer, &QTimer::timeout, [=]() {
+        // Main thread
+        callback();
+        timer->deleteLater();
+    });
+    QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 0));
+}
+
+// Initialize static objects
 QVector<QVector<Tile*>> Visualizer::floor;
 Coordinates Visualizer::startCoordinates;
 Coordinates Visualizer::goalCoordinates;
-
 
 // Helper function
 bool inBounds(Coordinates id) {
@@ -126,22 +156,22 @@ void Visualizer::clearFloor() {
 void Visualizer::on_Reset_clicked() { resetFloor(); }
 void Visualizer::on_Clear_clicked() { clearFloor(); }
 void Visualizer::on_Search_clicked() {
-    if (this->searchExecuted) clearFloor();
+    clearFloor();
+    QFuture<void> future;
+    if (mFuturewatcher.isRunning()) return;
     if (this->algorithm == Algorithm::breadthFirst) {
-        static Grid grid; // TODO: Change
-        grid.initGrid(floor);
-        grid.breadthFirstSearch();
+        static Grid grid;
+        future = QtConcurrent::run(grid, &Grid::breadthFirstSearch);
     }
     else if (this->algorithm == Algorithm::dijkstra) {
         static WeightedGrid grid;
-        grid.initGrid(floor);
-        grid.dijkstraSearch();
+        future = QtConcurrent::run(grid, &WeightedGrid::dijkstraSearch);
     }
     else if (this->algorithm == Algorithm::astar) {
         static WeightedGrid grid;
-        grid.initGrid((floor));
-        grid.aStarSearch();
+        future = QtConcurrent::run(grid, &WeightedGrid::aStarSearch);
     }
+    mFuturewatcher.setFuture(future);
     this->searchExecuted = true;
 }
 
