@@ -19,13 +19,11 @@ Visualizer::~Visualizer() { delete ui; }
 // Deactivate all input while animating path search
 void Visualizer::searchStarted() {
     QWidget::setEnabled(false);
-    qDebug() << "searchStarted()";
 }
 void Visualizer::searchEnded() {
     if (mFuturewatcher.isFinished()) {
         QWidget::setEnabled(true);
     }
-    qDebug() << "searchEnded()";
 }
 
 
