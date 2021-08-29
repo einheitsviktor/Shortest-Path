@@ -64,7 +64,6 @@ void Grid::breadthFirstSearch() {
         frontier.pop();
 
         if (current == Visualizer::goalCoordinates) {
-            // TODO: PRINT PATH
             printPath();
             break;
         }
@@ -79,10 +78,10 @@ void Grid::breadthFirstSearch() {
     }
     this->cameFrom.clear();
     this->obstacles.clear();
-    // Visualizer::setTile(Visualizer::startCoordinates, State::start);
     Visualizer::setTile(Visualizer::goalCoordinates, State::goal);
 }
 
+// TODO: Nudge cost function
 double WeightedGrid::cost(Coordinates fromNode, Coordinates toNode) const {
     return 1;
 }

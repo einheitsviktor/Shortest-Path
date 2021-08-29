@@ -18,14 +18,16 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 find_package(Qt5 COMPONENTS Concurrent REQUIRED)
 
 
+include_directories(include)
 set(PROJECT_SOURCES
-        main.cpp
-        helper.h
-        visualizer.cpp
-        visualizer.h
-        visualizer.ui
-        grid.h
-        grid.cpp
+        src/main.cpp
+        src/visualizer.cpp
+        src/grid.cpp
+        src/visualizer.ui
+
+        include/helper.h
+        include/visualizer.h
+        include/grid.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

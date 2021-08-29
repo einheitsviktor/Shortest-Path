@@ -6,9 +6,8 @@
 
 
 class Grid {
-    // int width, height;
-    // Coordinates start, goal;
 public:
+    Grid();
 
     // Container
     static std::array<Coordinates, 4> DELTA;
@@ -19,9 +18,6 @@ public:
     bool inBounds(Coordinates id) const;
     bool passable(Coordinates id) const;
     std::vector<Coordinates> neighbors(Coordinates id) const;
-
-    // Grid(int width, int height, QVector<QVector<Tile*>>& tiles);
-    Grid();
 
     // Methods
     void initGrid(QVector<QVector<Tile*>> tiles);
@@ -35,6 +31,8 @@ class WeightedGrid : public  Grid {
 public:
     std::unordered_map<Coordinates, double> costSoFar;
     double cost(Coordinates fromNode, Coordinates toNode) const;
+
+    // Search algorithms
     void dijkstraSearch();
     void aStarSearch();
 };

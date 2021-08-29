@@ -76,8 +76,6 @@ void Visualizer::handleObstacleClick(int index) {
         setTile({width, height}, State::obstacle);
     else if (floor[height][width]->isObstacle())
         setTile({width, height}, State::empty);
-
-    qInfo() << "{" << height << "," << width << "},";
 }
 void Visualizer::setupFloor() {
     QGridLayout* gridLayout = ui->gridLayout;
@@ -177,7 +175,6 @@ void Visualizer::keyPressEvent(QKeyEvent* event) {
         case Qt::Key_Return:    on_Search_clicked(); break;
         case Qt::Key_Backspace: on_Clear_clicked(); break;
         case Qt::Key_R:         on_Reset_clicked(); break;
-        case Qt::Key_P: printObstacles(); break;
         // // WASD
         case Qt::Key_W: on_UpO_clicked(); break;
         case Qt::Key_A: on_LeftO_clicked(); break;
@@ -192,23 +189,7 @@ void Visualizer::keyPressEvent(QKeyEvent* event) {
     }
 }
 
-
-// TODO: DELETE LATER
-//HELPER
-void Visualizer::printObstacles() {
-    int count = 0;
-    for (const auto& row : floor) {
-        for (const auto& tile: row) {
-            if (tile->isObstacle()) {
-                qDebug() << "{" << tile->x << "," << tile->y << "},";
-                ++count;
-            }
-        }
-    }
-    qDebug() << "COUNT OBSTACLES:" << count;
-}
-
-// Preset setter
+// Preset printer
 void Visualizer::printPreset(const QVector<QVector<int>>& preset) {
     resetFloor();
     for (auto& c : preset)

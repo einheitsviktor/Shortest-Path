@@ -37,9 +37,11 @@ public:
  private slots:
     void handleObstacleClick(int index);
 
-    void on_Reset_clicked();
-    void on_Clear_clicked();
-    void on_Search_clicked();
+    void on_Preset1_clicked();
+    void on_Preset2_clicked();
+    void on_Preset3_clicked();
+    void on_Preset4_clicked();
+    void on_Preset5_clicked();
 
     void on_UpO_clicked();
     void on_LeftO_clicked();
@@ -50,16 +52,13 @@ public:
     void on_DownD_clicked();
     void on_RightD_clicked();
 
-    void on_Preset1_clicked();
+    void on_Reset_clicked();
+    void on_Clear_clicked();
+    void on_Search_clicked();
 
     void on_BreadthSearch_toggled(bool checked);
     void on_DijkstraSearch_toggled(bool checked);
     void on_AstarSearch_toggled(bool checked);
-
-    void on_Preset2_clicked();
-    void on_Preset3_clicked();
-    void on_Preset4_clicked();
-    void on_Preset5_clicked();
 
 private:
     Ui::Visualizer *ui;
@@ -76,11 +75,8 @@ private:
 
     void keyPressEvent(QKeyEvent* event) override;
 
-    // HELPER
-    void printObstacles();
-    void printPreset(const QVector<QVector<int>>& preset);
-
     // Preset obstacles
+    void printPreset(const QVector<QVector<int>>& preset);
     const QVector<QVector<int>> preset1 = {
         {0,30},{0,31},{0,32},{1,30},{1,31},{1,32},{2,30},{2,31},{2,32},{3,3},{3,4},{3,5},{3,6},{3,7},{3,30},
         {3,31},{3,32},{4,3},{4,4},{4,5},{4,6},{4,7},{4,30},{4,31},{4,32},{5,3},{5,4},{5,5},{5,6},{5,7},{5,30},
