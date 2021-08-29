@@ -249,7 +249,7 @@ void Visualizer::on_Preset4_clicked() {
 void Visualizer::on_Preset5_clicked() {
    printPreset(this->preset5);
     updateStart({11, 9});
-    updateGoal({26, 9});
+    updateGoal({27, 9});
 }
 
 void Visualizer::on_BreadthSearch_toggled(bool checked) { this->algorithm = Algorithm::breadthFirst; }

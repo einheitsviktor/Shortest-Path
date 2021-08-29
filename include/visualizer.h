@@ -15,7 +15,7 @@ constexpr int WIDTH = 40;
 const QString EMPTY = "background-color: rgb(248, 248, 248);";
 const QString OBSTACLE = "background-color: rgb(0, 0, 75);";
 const QString PATH = "background-color: rgb(255, 255, 0);";
-const QString VISITED = "background-color: rgb(150,150,180);";
+const QString VISITED = "background-color: rgb(120,120,150);";
 const QString START = "background-color: rgb(0, 255, 0);";
 const QString GOAL = "background-color: red;";
 

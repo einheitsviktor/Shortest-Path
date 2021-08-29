@@ -51,7 +51,7 @@ void Grid::printPath() {
     auto rit = path.rbegin();
     for (; rit != path.rend(); ++rit) {
         Visualizer::dispatchToMainThread([=]{
-            Visualizer::setTile(*rit, State::path); // TODO: add dispatch here!
+            Visualizer::setTile(*rit, State::path);
         });
         QThread::usleep(10000);
     }
@@ -90,9 +90,14 @@ void Grid::breadthFirstSearch() {
     Visualizer::setTile(Visualizer::goalCoordinates, State::goal);
 }
 
-// TODO: Nudge cost function
+// Nudge cost function for "prettier" paths in Dijkstra and A*
 double WeightedGrid::cost(Coordinates fromNode, Coordinates toNode) const {
-    return 1;
+    bool nudge = false;
+    int x1 = fromNode.x, y1 = fromNode.y;
+    int x2 = toNode.x, y2 = toNode.y;
+    if ((x1 + y1) % 2 == 0 && x2 != x1) nudge = true;
+    if ((x1 + y1) % 2 == 1 && y2 != y1) nudge = true;
+    return  nudge ? 1.001 : 1;
 }
 
 void WeightedGrid::dijkstraSearch() {
