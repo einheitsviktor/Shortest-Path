@@ -2,7 +2,7 @@
 
 This is my attempt to implement a GUI in C++ to find the shortest path in a two-dimensional field.
 
-For the logic I followed this [guide](https://www.redblobgames.com/pathfinding/a-star/introduction.html) very closely and implemented the GUI in the Qt framework.
+Regarding the logic I followed this [guide](https://www.redblobgames.com/pathfinding/a-star/introduction.html) very closely and implemented the GUI using the Qt framework.
 
 ![Screenshot](Screenshot.png)
 
