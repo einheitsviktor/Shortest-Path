@@ -234,6 +234,23 @@
       <height>27</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 #f2f2f2);
+	border-style: solid;
+	border-color: grey;
+	border-width: 1px;
+	border-radius: 5px;
+}
+QPushButton:pressed {
+    background-color:qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #eff0f6);
+}
+QPushButton:hover:!pressed {
+	background-color:qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f1f2f3, stop: 1 #eff0f6);
+}</string>
+    </property>
     <property name="text">
      <string>Preset 1</string>
     </property>
@@ -286,6 +303,23 @@
       <height>27</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 #f2f2f2);
+	border-style: solid;
+	border-color: grey;
+	border-width: 1px;
+	border-radius: 5px;
+}
+QPushButton:pressed {
+    background-color:qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #eff0f6);
+}
+QPushButton:hover:!pressed {
+	background-color:qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f1f2f3, stop: 1 #eff0f6);
+}</string>
+    </property>
     <property name="text">
      <string>Preset 5</string>
     </property>
@@ -314,8 +348,28 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <pointsize>13</pointsize>
      </font>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 #f2f2f2);
+	border-style: solid;
+	border-color: grey;
+	border-width: 2px;
+	border-radius: 8px;
+}
+QPushButton:pressed {
+    background-color:qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #eff0f6);
+}
+QPushButton:hover:!pressed {
+	background-color:qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f1f2f3, stop: 1 #eff0f6);
+}</string>
     </property>
     <property name="text">
      <string>Search (Enter)</string>
@@ -394,6 +448,23 @@
       <width>30</width>
       <height>30</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 #f2f2f2);
+	border-style: solid;
+	border-color: grey;
+	border-width: 1px;
+	border-radius: 5px;
+}
+QPushButton:pressed {
+    background-color:qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #eff0f6);
+}
+QPushButton:hover:!pressed {
+	background-color:qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f1f2f3, stop: 1 #eff0f6);
+}</string>
     </property>
     <property name="text">
      <string>L</string>
@@ -504,8 +575,25 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <pointsize>11</pointsize>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 #f2f2f2);
+	border-style: solid;
+	border-color: grey;
+	border-width: 2px;
+	border-radius: 8px;
+}
+QPushButton:pressed {
+    background-color:qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #eff0f6);
+}
+QPushButton:hover:!pressed {
+	background-color:qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f1f2f3, stop: 1 #eff0f6);
+}</string>
     </property>
     <property name="text">
      <string>Clear (Backspace)</string>
@@ -522,8 +610,25 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <pointsize>11</pointsize>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 #f2f2f2);
+	border-style: solid;
+	border-color: grey;
+	border-width: 2px;
+	border-radius: 8px;
+}
+QPushButton:pressed {
+    background-color:qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #eff0f6);
+}
+QPushButton:hover:!pressed {
+	background-color:qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f1f2f3, stop: 1 #eff0f6);
+}</string>
     </property>
     <property name="text">
      <string>Reset (R)</string>

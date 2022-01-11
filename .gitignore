@@ -57,3 +57,4 @@ Release/*
 *.vim
 
 .cache
+release/*
